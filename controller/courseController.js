@@ -9,6 +9,9 @@ exports.createCourse= asyncHandler(async (req,res)=>{
     {
         return res.status(400).json({message:"All fields (description, title, price) are required"})
     }
+    if (req.body.startDate && !isValidDate(req.body.startDate)) {
+        return res.status(400).json({ error: "Invalid startDate format" });
+      }
    
     const course=await coures.create(req.body);
 
@@ -63,12 +66,17 @@ exports.updateCourse=asyncHandler(async(req,res)=>{
     if (Object.keys(updates).length === 0) {
         return res.status(400).json({ message: "At least one field (name, description, title, price) must be provided" });
     }
-    
-const updatedCourse=await coures.findByIdAndUpdate(ID,{$set:req.body});
+    const updatedCourse = await Course.findByIdAndUpdate(
+        ID,
+        { $set: req.body },
+        { new: true } 
+      );
 if(!updatedCourse)
 {
     return res.status(404).json({message:"the course Not found"});
 }
-return res.status(200).json({message:"Course updated successfully",data:updatedCourse});
-
+res.status(200).json({ 
+    message: "Course updated successfully", 
+    data: updatedCourse 
+  });
 })
