@@ -18,9 +18,9 @@ app.use('/api',courseRoute);
 app.get('/',(req,res)=>{
     res.status(200).json({"message":"hello world"});
 })
-
+DBconfig()
 app.listen(port,()=>{
-    DBconfig()
+    
 
 console.log(`server runing on port ${port}`)
 })
